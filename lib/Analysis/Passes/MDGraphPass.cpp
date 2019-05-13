@@ -90,26 +90,6 @@ static llvm::RegisterPass<pedigree::MDGraphWrapperPass>
     X(PEDIGREE_MDG_PASS_NAME, PRJ_CMDLINE_DESC("pedigree mdg pass"), false,
       true);
 
-// plugin registration for clang
-
-// the solution was at the bottom of the header file
-// 'llvm/Transforms/IPO/PassManagerBuilder.h'
-// create a static free-floating callback that uses the legacy pass manager to
-// add an instance of this pass and a static instance of the
-// RegisterStandardPasses class
-
-static void
-registerPedigreeMDGraphWrapperPass(const llvm::PassManagerBuilder &Builder,
-                                   llvm::legacy::PassManagerBase &PM) {
-  PM.add(new pedigree::MDGraphWrapperPass());
-
-  return;
-}
-
-static llvm::RegisterStandardPasses RegisterPedigreeMDGraphWrapperPass(
-    llvm::PassManagerBuilder::EP_EarlyAsPossible,
-    registerPedigreeMDGraphWrapperPass);
-
 //
 
 static llvm::cl::OptionCategory

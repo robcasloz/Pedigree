@@ -200,38 +200,4 @@ static llvm::RegisterPass<pedigree::PDGraphSimplePrinterWrapperPass>
     Y("pedigree-pdg-simple-dot",
       PRJ_CMDLINE_DESC("pedigree simple pdg DOT pass"), false, false);
 
-// plugin registration for clang
-
-// the solution was at the bottom of the header file
-// 'llvm/Transforms/IPO/PassManagerBuilder.h'
-// create a static free-floating callback that uses the legacy pass manager to
-// add an instance of this pass and a static instance of the
-// RegisterStandardPasses class
-
-static void registerPedigreePDGraphPrinterWrapperPass(
-    const llvm::PassManagerBuilder &Builder,
-    llvm::legacy::PassManagerBase &PM) {
-  PM.add(new pedigree::PDGraphPrinterWrapperPass());
-
-  return;
-}
-
-static llvm::RegisterStandardPasses RegisterPedigreePDGraphPrinterWrapperPass(
-    llvm::PassManagerBuilder::EP_EarlyAsPossible,
-    registerPedigreePDGraphPrinterWrapperPass);
-
 //
-
-static void registerPedigreePDGraphSimplePrinterWrapperPass(
-    const llvm::PassManagerBuilder &Builder,
-    llvm::legacy::PassManagerBase &PM) {
-  PM.add(new pedigree::PDGraphSimplePrinterWrapperPass());
-
-  return;
-}
-
-static llvm::RegisterStandardPasses
-    RegisterPedigreePDGraphSimplePrinterWrapperPass(
-        llvm::PassManagerBuilder::EP_EarlyAsPossible,
-        registerPedigreePDGraphSimplePrinterWrapperPass);
-
