@@ -50,7 +50,7 @@ struct MDGraphWrapperPass : public llvm::FunctionPass {
   static char ID;
   MDGraphResultT Graph;
 
-  MDGraphWrapperPass() : llvm::FunctionPass(ID) {}
+  MDGraphWrapperPass();
 
   void getAnalysisUsage(llvm::AnalysisUsage &AU) const override;
   bool runOnFunction(llvm::Function &CurFunction) override;

@@ -2,6 +2,8 @@
 //
 //
 
+#include "Pedigree/Pedigree.h"
+
 #include "Pedigree/Debug.hpp"
 
 #include "Pedigree/Util.hpp"
@@ -53,9 +55,17 @@ class Function;
 // plugin registration for opt
 
 char pedigree::DDGraphWrapperPass::ID = 0;
-static llvm::RegisterPass<pedigree::DDGraphWrapperPass>
-    X(PEDIGREE_DDG_PASS_NAME, PRJ_CMDLINE_DESC("pedigree ddg pass"), false,
-      true);
+
+using namespace llvm;
+using namespace pedigree;
+INITIALIZE_PASS_BEGIN(DDGraphWrapperPass, PEDIGREE_DDG_PASS_NAME, PRJ_CMDLINE_DESC("pedigree ddg pass"), false, false)
+INITIALIZE_PASS_END(DDGraphWrapperPass, PEDIGREE_DDG_PASS_NAME, PRJ_CMDLINE_DESC("pedigree ddg pass"), false, false)
+
+namespace llvm {
+  FunctionPass *llvm::createDDGraphWrapperPass() {
+    return new pedigree::DDGraphWrapperPass();
+  }
+}
 
 static llvm::cl::OptionCategory
     PedigreeDDGraphWrapperPassCategory("Pedigree DDGraph Pass",
@@ -88,6 +98,10 @@ DDGraphAnalysis::run(llvm::Function &F, llvm::FunctionAnalysisManager &FAM) {
 }
 
 // legacy passmanager pass
+
+DDGraphWrapperPass::DDGraphWrapperPass() : llvm::FunctionPass(ID) {
+  initializeDDGraphWrapperPassPass(*PassRegistry::getPassRegistry());
+}
 
 void DDGraphWrapperPass::getAnalysisUsage(llvm::AnalysisUsage &AU) const {
   AU.setPreservesAll();

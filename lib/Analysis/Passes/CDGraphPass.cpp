@@ -2,6 +2,8 @@
 //
 //
 
+#include "Pedigree/Pedigree.h"
+
 #include "Pedigree/Config.hpp"
 
 #include "Pedigree/Debug.hpp"
@@ -57,9 +59,17 @@ class Function;
 // plugin registration for opt
 
 char pedigree::CDGraphWrapperPass::ID = 0;
-static llvm::RegisterPass<pedigree::CDGraphWrapperPass>
-    X(PEDIGREE_CDG_PASS_NAME, PRJ_CMDLINE_DESC("pedigree cdg pass"), false,
-      true);
+
+using namespace llvm;
+using namespace pedigree;
+INITIALIZE_PASS_BEGIN(CDGraphWrapperPass, PEDIGREE_CDG_PASS_NAME, PRJ_CMDLINE_DESC("pedigree cdg pass"), false, false)
+INITIALIZE_PASS_END(CDGraphWrapperPass, PEDIGREE_CDG_PASS_NAME, PRJ_CMDLINE_DESC("pedigree cdg pass"), false, false)
+
+namespace llvm {
+  FunctionPass *llvm::createCDGraphWrapperPass() {
+    return new pedigree::CDGraphWrapperPass();
+  }
+}
 
 static llvm::cl::OptionCategory
     PedigreeCDGraphPassCategory("Pedigree CDGraph Pass",
@@ -98,6 +108,10 @@ CDGraphAnalysis::run(llvm::Function &F, llvm::FunctionAnalysisManager &FAM) {
 }
 
 // legacy passmanager pass
+
+CDGraphWrapperPass::CDGraphWrapperPass() : llvm::FunctionPass(ID) {
+  initializeCDGraphWrapperPassPass(*PassRegistry::getPassRegistry());
+}
 
 void CDGraphWrapperPass::getAnalysisUsage(llvm::AnalysisUsage &AU) const {
   AU.setPreservesAll();

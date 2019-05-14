@@ -2,6 +2,8 @@
 //
 //
 
+#include "Pedigree/Pedigree.h"
+
 #include "Pedigree/Config.hpp"
 
 #include "Pedigree/Debug.hpp"
@@ -77,9 +79,20 @@ extern llvm::cl::opt<bool> PedigreeGraphConnectRoot;
 // plugin registration for opt
 
 char pedigree::PDGraphWrapperPass::ID = 0;
-static llvm::RegisterPass<pedigree::PDGraphWrapperPass>
-    X(PEDIGREE_PDG_PASS_NAME, PRJ_CMDLINE_DESC("pedigree pdg pass"), false,
-      true);
+
+using namespace llvm;
+using namespace pedigree;
+INITIALIZE_PASS_BEGIN(PDGraphWrapperPass, PEDIGREE_PDG_PASS_NAME, PRJ_CMDLINE_DESC("pedigree pdg pass"), false, false)
+INITIALIZE_PASS_DEPENDENCY(CDGraphWrapperPass)
+INITIALIZE_PASS_DEPENDENCY(DDGraphWrapperPass)
+INITIALIZE_PASS_DEPENDENCY(MDGraphWrapperPass)
+INITIALIZE_PASS_END(PDGraphWrapperPass, PEDIGREE_PDG_PASS_NAME, PRJ_CMDLINE_DESC("pedigree pdg pass"), false, false)
+
+namespace llvm {
+  FunctionPass *llvm::createPDGraphWrapperPass() {
+    return new pedigree::PDGraphWrapperPass();
+  }
+}
 
 //
 
@@ -214,6 +227,7 @@ PDGraphAnalysis::run(llvm::Function &F, llvm::FunctionAnalysisManager &FAM) {
 // legacy passmanager pass
 
 PDGraphWrapperPass::PDGraphWrapperPass() : llvm::FunctionPass(ID) {
+  initializePDGraphWrapperPassPass(*PassRegistry::getPassRegistry());
   checkAndSetCmdLineOptions();
 }
 

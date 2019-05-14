@@ -47,7 +47,7 @@ struct CDGraphWrapperPass : public llvm::FunctionPass {
   CDGraphResultT Graph;
   std::unique_ptr<InstCDGraph> InstGraph;
 
-  CDGraphWrapperPass() : llvm::FunctionPass(ID) {}
+  CDGraphWrapperPass();
 
   void getAnalysisUsage(llvm::AnalysisUsage &AU) const override;
   bool runOnFunction(llvm::Function &CurFunction) override;

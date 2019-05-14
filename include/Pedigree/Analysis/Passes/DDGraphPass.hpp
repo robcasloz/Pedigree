@@ -46,7 +46,7 @@ struct DDGraphWrapperPass : public llvm::FunctionPass {
   static char ID;
   DDGraphResultT Graph;
 
-  DDGraphWrapperPass() : llvm::FunctionPass(ID) {}
+  DDGraphWrapperPass();
 
   void getAnalysisUsage(llvm::AnalysisUsage &AU) const override;
   bool runOnFunction(llvm::Function &CurFunction) override;

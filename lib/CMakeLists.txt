@@ -1,5 +1,6 @@
 # Pedigree
 add_llvm_library(LLVMPedigree
+  Pedigree.cpp
   Analysis/Hazards.cpp
   Analysis/Graphs/DependenceGraphs.cpp
   Analysis/Passes/MDGraphPass.cpp
