@@ -2,7 +2,7 @@
 //
 //
 
-#include "Pedigree/Pedigree.h"
+#include "llvm/Transforms/Utils.h"
 
 #include "Pedigree/Config.hpp"
 
@@ -88,13 +88,14 @@ class Function;
 // plugin registration for opt
 
 char pedigree::MDGraphWrapperPass::ID = 0;
+char &llvm::MDGraphID = pedigree::MDGraphWrapperPass::ID;
 
 using namespace llvm;
 using namespace pedigree;
-INITIALIZE_PASS_BEGIN(MDGraphWrapperPass, PEDIGREE_MDG_PASS_NAME, PRJ_CMDLINE_DESC("pedigree mdg pass"), false, false)
+INITIALIZE_PASS_BEGIN(MDGraphWrapperPass, PEDIGREE_MDG_PASS_NAME, PRJ_CMDLINE_DESC("pedigree mdg pass"), false, true)
 INITIALIZE_PASS_DEPENDENCY(MemoryDependenceWrapperPass)
 INITIALIZE_PASS_DEPENDENCY(DependenceAnalysisWrapperPass)
-INITIALIZE_PASS_END(MDGraphWrapperPass, PEDIGREE_MDG_PASS_NAME, PRJ_CMDLINE_DESC("pedigree mdg pass"), false, false)
+INITIALIZE_PASS_END(MDGraphWrapperPass, PEDIGREE_MDG_PASS_NAME, PRJ_CMDLINE_DESC("pedigree mdg pass"), false, true)
 
 namespace llvm {
   FunctionPass *llvm::createMDGraphWrapperPass() {

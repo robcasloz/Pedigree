@@ -2,7 +2,7 @@
 //
 //
 
-#include "Pedigree/Pedigree.h"
+#include "llvm/Transforms/Utils.h"
 
 #include "Pedigree/Config.hpp"
 
@@ -59,11 +59,12 @@ class Function;
 // plugin registration for opt
 
 char pedigree::CDGraphWrapperPass::ID = 0;
+char &llvm::CDGraphID = pedigree::CDGraphWrapperPass::ID;
 
 using namespace llvm;
 using namespace pedigree;
-INITIALIZE_PASS_BEGIN(CDGraphWrapperPass, PEDIGREE_CDG_PASS_NAME, PRJ_CMDLINE_DESC("pedigree cdg pass"), false, false)
-INITIALIZE_PASS_END(CDGraphWrapperPass, PEDIGREE_CDG_PASS_NAME, PRJ_CMDLINE_DESC("pedigree cdg pass"), false, false)
+INITIALIZE_PASS_BEGIN(CDGraphWrapperPass, PEDIGREE_CDG_PASS_NAME, PRJ_CMDLINE_DESC("pedigree cdg pass"), false, true)
+INITIALIZE_PASS_END(CDGraphWrapperPass, PEDIGREE_CDG_PASS_NAME, PRJ_CMDLINE_DESC("pedigree cdg pass"), false, true)
 
 namespace llvm {
   FunctionPass *llvm::createCDGraphWrapperPass() {
